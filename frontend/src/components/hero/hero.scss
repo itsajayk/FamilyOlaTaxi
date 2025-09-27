@@ -1,0 +1,159 @@
+@import '../../style/App.scss';
+
+// Theme variables (tweakable)
+$primary: #0f62fe; // deep blue
+$accent: #ff6b35;  // warm orange
+$muted: #6b7280;   // gray
+$card-bg: rgba(255,255,255,0.85);
+$glass: rgba(255,255,255,0.06);
+$shadow: 0 10px 30px rgba(2,6,23,0.12);
+
+.hero {
+  padding-top: 140px;
+  width: 100%;
+  padding-bottom: 60px;
+  .hero-info {
+    padding-top: 60px;
+
+    p {
+      padding-top: 20px;
+      padding-bottom: 50px;
+      color: $muted;
+      max-width: 56ch;
+    }
+
+    // Booking form sits here
+    .hero-booking {
+      margin-top: 24px;
+    }
+  }
+
+  .hero-image {
+    max-width: 570px;
+    height: auto;
+    float: right;
+
+    img { display:block; width:100%; border-radius: 18px; box-shadow: $shadow; }
+  }
+}
+
+// Booking form styles — modern, glass-card, responsive grid
+.booking-form {
+  width: 100%;
+  max-width: 820px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.62));
+  backdrop-filter: blur(8px) saturate(120%);
+  border-radius: 18px;
+  box-shadow: $shadow;
+  padding: 20px;
+  border: 1px solid rgba(255,255,255,0.35);
+  display: block;
+  transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms;
+
+  &:hover { transform: translateY(-6px); box-shadow: 0 18px 50px rgba(2,6,23,0.15); }
+
+  // Grid rows
+  .row { display: flex; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
+
+  .field {
+    flex: 1 1 48%;
+    display: flex;
+    flex-direction: column;
+
+    &.full { flex-basis: 100%; }
+
+    label {
+      font-size: 12px; color: darken($muted, 10%); margin-bottom: 8px; font-weight: 600;
+    }
+
+    select, input[type="text"], input[type="datetime-local"] {
+      height: 46px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(17,24,39,0.06);
+      background: linear-gradient(180deg, #fff, #fbfbfb);
+      outline: none; font-size: 14px; color: #0b1220;
+      transition: box-shadow 180ms, transform 120ms, border-color 180ms;
+
+      &:focus { box-shadow: 0 6px 20px rgba(15,98,254,0.08); border-color: rgba($primary, 0.15); transform: translateY(-1px); }
+    }
+
+    .input-with-actions { display:flex; gap:8px; align-items:center; }
+
+    .actions { display:flex; gap:6px; margin-left:8px; }
+
+    .map-btn, .loc-btn {
+      width:44px; height:44px; border-radius: 10px; border: none; cursor:pointer;
+      display:flex; align-items:center; justify-content:center; font-size:18px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.02));
+      transition: transform 140ms ease, box-shadow 140ms ease;
+
+      &:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(2,6,23,0.08); }
+    }
+  }
+
+  .actions-right { display:flex; align-items:flex-end; justify-content:flex-end; }
+
+  // CTA Button — uses your Button component styles but wrap to enforce appearance
+  .btn { border-radius: 10px; padding: 10px 20px; }
+
+  // small helper text
+  .hint { font-size: 12px; color: $muted; margin-top:6px; }
+}
+
+// Map modal — slide-up with soft backdrop
+.map-modal {
+  position: fixed; inset: 0; display:flex; align-items:flex-end; justify-content:center; z-index: 1500;
+  background: linear-gradient(0deg, rgba(6,11,21,0.55), rgba(6,11,21,0.25));
+
+  .map-modal-inner {
+    width: 100%; max-width: 920px; background: #fff; border-radius: 12px 12px 0 0; padding: 18px;
+    box-shadow: 0 -6px 40px rgba(2,6,23,0.2);
+    transform: translateY(24px); animation: slideUp 320ms cubic-bezier(.2,.9,.3,1) forwards;
+
+    h4 { margin: 0 0 6px 0; }
+    p { color: $muted; margin-bottom: 12px; }
+    .modal-actions { display:flex; gap:8px; justify-content:flex-end; }
+    button { padding: 8px 12px; border-radius: 8px; border: none; cursor: pointer; }
+  }
+}
+
+@keyframes slideUp { to { transform: translateY(0); } }
+
+// Responsive breakpoints
+@media (max-width: 1024px) {
+  .booking-form { padding: 18px; max-width: 640px; }
+  .booking-form .field { flex-basis: 48%; }
+}
+
+@media (max-width: 600px) {
+  .hero { padding-top: 120px; padding-bottom: 40px; }
+  .hero .hero-info { padding-top: 18px; }
+
+  .booking-form { padding: 14px; border-radius: 12px; max-width: 100%; }
+  .booking-form .row { gap: 10px; }
+  .booking-form .field { flex-basis: 100%; }
+
+  .booking-form .map-btn, .booking-form .loc-btn { width:40px; height:40px; }
+
+  .hero-image { display:none; }
+}
+
+// Small decorative accent — left border with gradient and tiny badge
+.booking-form.hero-booking {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute; left: -18px; top: 20px; bottom: 20px; width: 6px;
+    border-radius: 6px; background: linear-gradient(180deg, $primary, $accent);
+    box-shadow: 0 8px 30px rgba($primary, 0.08);
+  }
+
+  .badge {
+    position: absolute; right: 18px; top: -12px; background: $accent; color: #fff; padding: 6px 10px; border-radius: 999px; font-weight:700; font-size:12px;
+    box-shadow: 0 6px 20px rgba(255,107,53,0.18);
+  }
+}
+
+// Tiny utility
+.font12 { font-size:12px; }
