@@ -1,14 +1,16 @@
-import React, { useState } from "react";
-import { Row, Col } from "react-flexbox-grid";
-// SCSS
+import React, { useEffect, useState } from "react";
+import { Row, Col } from 'react-flexbox-grid';
+import { motion, AnimatePresence } from 'framer-motion';
+// Keep existing SCSS import (we'll inject small carousel-specific styles below to avoid needing a separate file)
 import "./hero.scss";
-//Assets
-import HeroImage from '../../assets/hero/taxi.jpg';
-//Components
+// Assets (add additional images here if you want)
+import HeroImage1 from '../../assets/hero/taxi.jpg';
+import HeroImage2 from '../../assets/hero/taxi-car.jpeg';
+import HeroImage3 from '../../assets/hero/car-taxi-2.jpg';
+import HeroImage4 from '../../assets/hero/car-hero.jpg';
 import Button from '../ui-components/button/button';
-import { motion } from 'framer-motion';
 
-// Booking form component is embedded here so hero.jsx stays self-contained
+// --- BookingForm (kept self-contained from your original file) ---
 const BookingForm = ({ className = '' }) => {
   const [tripType, setTripType] = useState('One-way');
   const [cabType, setCabType] = useState('Sedan');
@@ -19,7 +21,6 @@ const BookingForm = ({ className = '' }) => {
   const [showPickupMap, setShowPickupMap] = useState(false);
   const [showDropMap, setShowDropMap] = useState(false);
 
-  // Simple validation
   const validate = () => {
     if (!pickup.address || !drop.address || !pickupDateTime) {
       alert('Please fill pickup, drop and pickup date/time');
@@ -28,7 +29,6 @@ const BookingForm = ({ className = '' }) => {
     return true;
   }
 
-  // Placeholder "map" action: use browser geolocation for quick selection
   const getMyLocation = async (setter) => {
     if (!navigator.geolocation) {
       alert('Geolocation not supported by your browser');
@@ -37,7 +37,6 @@ const BookingForm = ({ className = '' }) => {
     navigator.geolocation.getCurrentPosition((pos) => {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
-      // We don't have reverse-geocoding here — store lat/lng and a simple address label
       setter({ address: `My Location (${lat.toFixed(4)}, ${lng.toFixed(4)})`, lat, lng });
     }, () => alert('Unable to fetch your location'));
   }
@@ -64,7 +63,6 @@ const BookingForm = ({ className = '' }) => {
       if (!res.ok) throw new Error('Failed to save booking');
       const data = await res.json();
       alert('Booking submitted! Reference: ' + (data._id || 'n/a'));
-      // reset small parts
       setPickup({ address: '', lat: null, lng: null });
       setDrop({ address: '', lat: null, lng: null });
       setPickupDateTime('');
@@ -154,7 +152,6 @@ const BookingForm = ({ className = '' }) => {
         </div>
       </div>
 
-      {/* Simple map modal placeholders. Replace with real Map/Leaflet/GoogleMap later */}
       {showPickupMap && (
         <div className="map-modal">
           <div className="map-modal-inner">
@@ -184,33 +181,63 @@ const BookingForm = ({ className = '' }) => {
   )
 }
 
-const Hero = () => (
-  <div className="hero" id="hero">
-    <div className="wrapper">
-      <Row>
-        <Col md={12} lg={6}>
-          <div className="hero-info">
-            <h1 className="weight800 font50">Family OLA Taxi Awaits!</h1>
-            <h1 className="weight800 font40">Ride Anytime, Anywhere — Hassle-Free.</h1>
+// --- Hero with background carousel and overlay booking form ---
+const Hero = () => {
+  const slides = [
+    { id: 1, img: HeroImage1, title: 'Family OLA Taxi Awaits!', subtitle: 'Ride Anytime, Anywhere — Hassle-Free.' },
+    { id: 2, img: HeroImage2, title: 'Safe. Clean. Reliable.', subtitle: 'Airport pickups, hourly hires, and city rides.' },
+    { id: 3, img: HeroImage3, title: 'Your Ride, Your Comfort.', subtitle: 'Travel in style with premium vehicles at your service.' },
+    { id: 4, img: HeroImage4, title: 'Quick and Easy Booking.', subtitle: 'Reserve your ride in seconds — no hassle, no wait.' }
+
+  ];
+
+  const [index, setIndex] = useState(0);
+  const delay = 5000; // 5s per slide
+
+  useEffect(() => {
+    const t = setInterval(() => setIndex(i => (i + 1) % slides.length), delay);
+    return () => clearInterval(t);
+  }, [slides.length]);
+
+  return (
+    <div className="hero hero-carousel" id="hero">
+
+      {/* Carousel slides (behind everything) */}
+      <div className="carousel" aria-hidden="true">
+        <AnimatePresence initial={false}>
+          {slides.map((s, i) => (
+            i === index ? (
+              <motion.div
+                key={s.id}
+                className="carousel-slide"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+                style={{ backgroundImage: `url(${s.img})` }}
+              />
+            ) : null
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {/* Content overlay (on top of carousel) */}
+      <div className="carousel-overlay">
+        <div className="wrapper overlay-panel">
+          <div className="hero-content">
+            <h1 className="weight800 font50">{slides[index].title}</h1>
+            <h2 className="weight700 font24">{slides[index].subtitle}</h2>
             <p className="font12">From airport pickups to city commutes, our reliable taxi service is just a tap away. Clean cars. Friendly drivers. Transparent pricing.</p>
-
-            {/* Booking form injected into hero-info. It is responsive and keeps existing CTA button below for backward compatibility */}
-            <BookingForm className="hero-booking" />
-
-            {/* <div className="hero-cta">
-              <Button label="SEND MESSAGE" target={"contact"} />
-            </div> */}
           </div>
-        </Col>
 
-        <Col md={12} lg={6}>
-          <div className="hero-image">
-            <img src={HeroImage} alt="hero" />
+          <div className="hero-booking-card">
+            <BookingForm />
           </div>
-        </Col>
-      </Row>
+        </div>
+      </div>
+
     </div>
-  </div>
-);
+  )
+}
 
 export default Hero;

@@ -45,7 +45,7 @@ $shadow: 0 10px 30px rgba(2,6,23,0.12);
   backdrop-filter: blur(8px) saturate(120%);
   border-radius: 18px;
   box-shadow: $shadow;
-  padding: 20px;
+  padding: 30px;
   border: 1px solid rgba(255,255,255,0.35);
   display: block;
   transition: transform 220ms cubic-bezier(.2,.9,.3,1), box-shadow 220ms;
@@ -157,3 +157,91 @@ $shadow: 0 10px 30px rgba(2,6,23,0.12);
 
 // Tiny utility
 .font12 { font-size:12px; }
+
+ .hero-carousel {
+   position: relative;
+   overflow: hidden;
+   padding: 60px 0;
+ }
+
+ .hero-carousel .carousel {
+   position: absolute;
+   inset: 0;
+   z-index: 0;
+   display: block;
+ }
+
+ .hero-carousel .carousel-slide {
+   position: absolute;
+   inset: 0;
+   background-size: cover;
+   background-position: center;
+ }
+
+ .hero-carousel .carousel-overlay {
+   position: relative;
+   z-index: 5;
+ }
+
+ .hero-carousel .overlay-panel {
+   max-width: 980px;
+   margin: 0 auto;
+   position: relative;
+   padding: 40px;
+   display: flex;
+   gap: 30px;
+   align-items: center;
+ }
+
+ .hero-carousel .hero-content {
+   color: #fff;
+   max-width: 540px;
+ }
+
+ .hero-carousel h1 {
+   margin: 0 0 12px;
+   line-height: 1.05;
+ }
+
+ .hero-carousel p {
+   opacity: .9;
+ }
+
+ /* dim layer on top of slides to increase contrast */
+ .hero-carousel::before {
+   content: '';
+   position: absolute;
+   inset: 0;
+   background: linear-gradient(0deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.15));
+   z-index: 2;
+   pointer-events: none;
+ }
+
+ /* booking form overlay card */
+ .hero-booking-card {
+  //  background: rgba(255, 255, 255, 0.98);
+   border-radius: 10px;
+   padding: 48px;
+   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  //  width: 420px;
+ }
+
+ @media(max-width: 900px) {
+   .hero-carousel {
+     padding: 30px 0;
+   }
+
+   .hero-carousel .overlay-panel {
+     flex-direction: column-reverse;
+     padding: 20px;
+   }
+
+   .hero-booking-card {
+     width: 100%;
+   }
+
+   .hero-carousel .hero-content {
+     max-width: 100%;
+     text-align: center;
+   }
+ }
