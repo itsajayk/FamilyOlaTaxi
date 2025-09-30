@@ -1,8 +1,11 @@
 import React from "react";
-import Swiper from "react-id-swiper";
+// Removed Swiper import and params — using CSS Grid instead. /* CHANGED */
+// import Swiper from "react-id-swiper"; // CHANGED - removed
+// import 'swiper/css' // CHANGED - removed
+
 // SCSS
 import "./blog.scss";
-import 'swiper/css' // Assets
+// Assets
 import Preview01 from "../../assets/blog/story01/preview.png";
 import Preview02 from "../../assets/blog/story02/preview.png";
 import Preview03 from "../../assets/blog/story03/preview.png";
@@ -67,50 +70,23 @@ class Blog extends React.Component {
     let storiesRender = null;
     if (this.state.stories) {
       storiesRender = this.state.stories.map((story) => (
-        <div key={story.id}>
-          <BlogBox article={story} />
-        </div>
+        // CHANGED: render BlogBox directly inside CSS grid cell
+        <BlogBox article={story} key={story.id} />
       ));
     }
-    // OPTIONS FOR BLOG SLIDER
-    const params = {
-      grabCursor: true,
-      slidesPerView: 1,
-      spaceBetween: 10,
-      loop: true,
-      breakpoints: {
-        1200: {
-          slidesPerView: 3,
-          spaceBetween: 40,
-        },
-        1024: {
-          slidesPerView: 3,
-          spaceBetween: 40,
-        },
-        768: {
-          slidesPerView: 2,
-          spaceBetween: 30,
-        },
-        640: {
-          slidesPerView: 1,
-          spaceBetween: 20,
-        },
-        320: {
-          slidesPerView: 1,
-          spaceBetween: 10,
-        },
-      },
-    };
 
     return (
       <div className="blog" id="blog">
         <div className="wrapper">
           <Title title="OUR BLOG." />
           <p className="font12">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt<br></br>ut labore et dolore magna aliqua.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt<br />ut labore et dolore magna aliqua.
           </p>
           <div className="padding30">
-            <Swiper {...params}>{storiesRender}</Swiper>
+            {/* CHANGED: replaced Swiper with responsive CSS Grid */}
+            <div className="blog-grid">
+              {storiesRender}
+            </div>
           </div>
         </div>
       </div>

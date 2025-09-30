@@ -130,7 +130,7 @@ $shadow: 0 10px 30px rgba(2,6,23,0.12);
   .hero { padding-top: 120px; padding-bottom: 40px; }
   .hero .hero-info { padding-top: 18px; }
 
-  .booking-form { padding: 14px; border-radius: 12px; max-width: 100%; }
+  .booking-form { padding: 34px; border-radius: 12px; max-width: 100%; }
   .booking-form .row { gap: 10px; }
   .booking-form .field { flex-basis: 100%; }
 
@@ -237,7 +237,9 @@ $shadow: 0 10px 30px rgba(2,6,23,0.12);
    }
 
    .hero-booking-card {
-     width: 100%;
+    //  width: 100%;
+       padding: 88px 20px;
+
    }
 
    .hero-carousel .hero-content {

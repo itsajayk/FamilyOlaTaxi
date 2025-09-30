@@ -2,19 +2,24 @@
 
 .blog__box {
   background-color: $white-color;
-  width: 100%;
-  max-width: 370px;
+  width: 100%;                /* CHANGED: use full width of grid cell */
+  max-width: none;            /* CHANGED: removed fixed 370px to allow grid sizing */
   min-height: 460px;
   position: relative;
-  margin: 30px auto;
+  margin: 0;                  /* CHANGED: spacing handled by grid gap */
+  box-sizing: border-box;     /* CHANGED */
+  display: flex;              /* CHANGED */
+  flex-direction: column;     /* CHANGED */
+  overflow: hidden;           /* CHANGED */
 
   .blog__image {
     width: 100%;
-    height: auto;
     position: relative;
+
     img {
       width: 100%;
       height: auto;
+      display: block;         /* CHANGED */
     }
 
     .blog__hover {
@@ -27,6 +32,12 @@
       position: absolute;
       top: 0;
       left: 0;
+      display: flex;           /* CHANGED */
+      align-items: center;     /* CHANGED */
+      justify-content: center; /* CHANGED */
+      text-align: center;
+      padding: 10px;
+      box-sizing: border-box;
     }
   }
 
@@ -37,11 +48,35 @@
   }
 
   .blog__info {
-    padding: 35px;
+    padding: 28px;            /* CHANGED: slightly smaller padding to fit mobile */
+    flex: 1 1 auto;           /* CHANGED: allow info to grow */
+    display: flex;            /* CHANGED */
+    flex-direction: column;   /* CHANGED */
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
 
-    h4 {
-      text-transform: uppercase;
-    }
+  h4, p {
+    margin: 0 0 8px 0;
+  }
+
+  .padding10 {
+    margin-bottom: 12px;
   }
 }
 
+/* Optional small visual tweak for mobile */
+@media screen and (max-width: 480px) {
+  .blog__box {
+    min-height: auto;         /* CHANGED: don't force big height on tiny screens */
+    border-radius: 6px;
+  }
+
+  .blog__info {
+    padding: 16px;            /* CHANGED */
+  }
+
+  .blog__image .blog__hover h4 {
+    font-size: 16px;          /* CHANGED */
+  }
+}

@@ -69,7 +69,7 @@ class App extends React.Component {
         />
         <Hero />
         <Portfolio />
-        <Partners />
+        {/* <Partners /> */}
         <About />
         <Blog />
         <Contact />

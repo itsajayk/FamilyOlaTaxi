@@ -10,3 +10,53 @@
     text-align: center;
   }
 }
+
+/* GRID: 3 columns desktop, 2 tablet, 1 mobile — CHANGED */
+.blog .wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.blog-grid { /* CHANGED */
+  display: grid;                             /* CHANGED */
+  grid-template-columns: repeat(3, 1fr);     /* CHANGED */
+  gap: 30px;                                 /* CHANGED */
+  align-items: start;
+  margin-top: 30px;
+}
+
+/* 2 columns for medium screens */
+@media screen and (max-width: 1024px) {
+  .blog-grid {
+    grid-template-columns: repeat(2, 1fr);   /* CHANGED */
+    gap: 24px;                               /* CHANGED */
+  }
+}
+
+/* 1 column for small screens */
+@media screen and (max-width: 768px) {
+  .blog {
+    padding: 40px 0;                         /* CHANGED */
+  }
+  .blog-grid {
+    grid-template-columns: 1fr;              /* CHANGED */
+    gap: 18px;                               /* CHANGED */
+  }
+
+  .padding30 {
+    padding: 8px 0;                          /* CHANGED */
+  }
+}
+
+/* small devices improvements */
+@media screen and (max-width: 480px) {
+  .blog {
+    padding: 28px 0;                         /* CHANGED */
+  }
+
+  .blog p.font12 {
+    line-height: 1.35;
+    font-size: 12px;
+  }
+}
