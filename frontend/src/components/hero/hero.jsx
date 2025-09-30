@@ -458,7 +458,8 @@ const BookingForm = ({ className = "" }) => {
           {/* Pickup with inline search */}
         <div className="field full" style={{ position: "relative" }}>
           <label>Pick-up Location</label>
-          <div className="input-with-actions">
+
+          <div className="input-with-actions" style={{ position: 'relative' }}>
             <input
               aria-label="Pickup address"
               aria-autocomplete="list"
@@ -472,12 +473,14 @@ const BookingForm = ({ className = "" }) => {
               }}
               onKeyDown={onPickupKeyDown}
               placeholder="Type address or open map"
+              style={{ paddingRight: 110 }} /* leave room for internal controls */
             />
-            <div className="actions">
-              {/* clear button: only visible when there's text (controlled by CSS) */}
+
+            {/* inside-input clear button (only shown when input has text) */}
+            {(pickupQuery || pickup.address) && (
               <button
                 type="button"
-                className="clear-btn"
+                className="input-clear-btn"
                 aria-label="Clear pickup"
                 onClick={() => {
                   setPickup({ address: "", lat: null, lng: null });
@@ -487,7 +490,10 @@ const BookingForm = ({ className = "" }) => {
                 }}
                 title="Clear"
               >×</button>
+            )}
 
+            {/* action buttons sit to the right (kept visually outside input but inside actions area) */}
+            <div className="actions" style={{ right: 10, position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}>
               <button type="button" className="map-btn" onClick={() => openMap("pickup")} title="Open map">📍</button>
               <button type="button" className="loc-btn" onClick={() => {
                 if (!navigator.geolocation) return alert("Geolocation not supported");
@@ -521,10 +527,13 @@ const BookingForm = ({ className = "" }) => {
           )}
         </div>
 
+
           {/* Drop with inline search */}
+        {/* Drop with inline search (clear button inside input) */}
         <div className="field full" style={{ position: "relative" }}>
           <label>Drop Location</label>
-          <div className="input-with-actions">
+
+          <div className="input-with-actions" style={{ position: 'relative' }}>
             <input
               aria-label="Drop address"
               aria-autocomplete="list"
@@ -538,11 +547,14 @@ const BookingForm = ({ className = "" }) => {
               }}
               onKeyDown={onDropKeyDown}
               placeholder="Type address or open map"
+              style={{ paddingRight: 110 }}
             />
-            <div className="actions">
+
+            {/* inside-input clear button (only when input has text) */}
+            {(dropQuery || drop.address) && (
               <button
                 type="button"
-                className="clear-btn"
+                className="input-clear-btn"
                 aria-label="Clear drop"
                 onClick={() => {
                   setDrop({ address: "", lat: null, lng: null });
@@ -552,7 +564,9 @@ const BookingForm = ({ className = "" }) => {
                 }}
                 title="Clear"
               >×</button>
+            )}
 
+            <div className="actions" style={{ right: 10, position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}>
               <button type="button" className="map-btn" onClick={() => openMap("drop")} title="Open map">📍</button>
               <button type="button" className="loc-btn" onClick={() => {
                 if (!navigator.geolocation) return alert("Geolocation not supported");
@@ -585,7 +599,6 @@ const BookingForm = ({ className = "" }) => {
             </ul>
           )}
         </div>
-
         </div>
 
         <div className="row">
