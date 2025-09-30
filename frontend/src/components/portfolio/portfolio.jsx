@@ -5,12 +5,12 @@ import Masonry from "react-masonry-css";
 import "./portfolio.scss";
 //Assets
 import Arrow from "../../assets/portfolio/arrow.svg";
-import Preview1 from "../../assets/portfolio/project01/preview.png";
-import Preview2 from "../../assets/portfolio/project02/preview.png";
-import Preview3 from "../../assets/portfolio/project03/preview.png";
-import Preview4 from "../../assets/portfolio/project04/preview.png";
-import Preview5 from "../../assets/portfolio/project05/preview.png";
-import Preview6 from "../../assets/portfolio/project06/preview.png";
+import Preview1 from "../../assets/portfolio/project01/preview-01.jpg";
+import Preview2 from "../../assets/portfolio/project02/preview-02.jpg";
+import Preview3 from "../../assets/portfolio/project03/preview-03.jpg";
+import Preview4 from "../../assets/portfolio/project04/preview-04.jpg";
+import Preview5 from "../../assets/portfolio/project05/preview-05.jpg";
+import Preview6 from "../../assets/portfolio/project06/preview-06.webp";
 //Components
 import Button from "../ui-components/button/button";
 import Title from "../ui-components/title/title";
