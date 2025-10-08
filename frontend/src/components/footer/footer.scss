@@ -1,58 +1,108 @@
-@import '../../style/App.scss';
+/* Footer styles for Family Ola Taxi */
 
 .footer {
-  background-color: $black-color;
-  width: 100%;
-  min-height: 180px;
-
-  .footer-box {
-    min-height: 180px;
-    display: flex;
-    align-items: center;
-
-    p {
-      color: $white-color;
-      font-size: 1.1rem;
-      margin-left: 30px;
-    }
-  }
-
-  .back-to-top {
-    float: right;
-    cursor: pointer;
-    img {
-      margin-left: 10px;
-    }
-  }
-
-  .back-to-top:hover {
-    p {
-      color: $main-color;
-    }
-  }
+  background: #800020; /* dark background — change if your theme differs */
+  color: #ffffff;
+  padding: 32px 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
-@media screen and (max-width: 580px) {
-  .footer {
-    .footer-box {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      img {
-        padding-bottom: 30px;
-      }
-    }
-    .back-to-top {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      float: none;
-      flex-direction: row;
-      
-      img {
-        padding-bottom: 0px;
-      }
-    }
-  }
+.footer .wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
+
+.footer-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-box.contact {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.brand-and-contact {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.footer-logo {
+  width: 110px;
+  height: auto;
+  display: block;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-info address {
+  font-style: normal;
+  line-height: 1.45;
+  margin: 0;
+  color: rgba(255,255,255,0.95);
+  font-weight: 600;
+}
+
+.phones {
+  margin-top: 8px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.phones a {
+  text-decoration: none;
+  color: #ffd166; /* accent color for phone numbers — change to match your palette */
+  font-weight: 700;
+  background: rgba(255,255,255,0.03);
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.copyright {
+  margin-top: 8px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+}
+
+.back-to-top {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 6px 8px;
+}
+
+.back-to-top p {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+}
+
+.back-to-top img {
+  width: 18px;
+  height: 18px;
+}
+
+/* Responsive tweaks */
+@media (min-width: 768px) {
+  .footer-box.contact { flex-direction: column; align-items: flex-start; }
+  .back-to-top { justify-content: flex-end; }
+}
+
+@media (max-width: 767px) {
+  .footer-box { flex-direction: column; gap: 16px; align-items: stretch; }
+  .back-to-top { justify-content: flex-start; }
+  .brand-and-contact { align-items: center; flex-direction: column; text-align: center; }
+  .contact-info address { text-align: center; }
+  .phones { justify-content: center; }
+}
+// 

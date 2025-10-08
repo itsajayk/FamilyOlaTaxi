@@ -102,9 +102,18 @@ textarea:active, textarea:focus {
     }
   }
 
-
-
-
+.video-wrapper {
+  width: 100%;
+  max-width: 570px;
+  display: block;
+}
+.video-wrapper video {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+}
 
   @media screen and (max-width: 990px) {
   #contact {
@@ -113,4 +122,5 @@ textarea:active, textarea:focus {
   .sending-btn {
     margin: 30px auto;
   }
+  .video-wrapper { margin: 20px auto; }
 }

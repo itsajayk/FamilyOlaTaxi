@@ -20,43 +20,43 @@ class Portfolio extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // PORTFOLIO PROJECTS
+      // FLEET PROJECTS (only text changed)
       projects: [
         {
           id: "1",
           preview: Preview1,
-          title: "Lamp",
-          tag: "branding",
+          title: "Sedan - Comfort",
+          tag: "sedan",
         },
         {
           id: "2",
           preview: Preview2,
-          title: "Smartwatch",
-          tag: "web",
+          title: "SUV - Family",
+          tag: "suv",
         },
         {
           id: "3",
           preview: Preview3,
-          title: "Speakerphone",
-          tag: "illustrations",
+          title: "Hatchback - Economy",
+          tag: "sedan",
         },
         {
           id: "4",
           preview: Preview4,
-          title: "Sneakers",
-          tag: "web",
+          title: "Tempo Traveller",
+          tag: "outstation",
         },
         {
           id: "5",
           preview: Preview5,
-          title: "Label",
-          tag: "illustrations",
+          title: "Airport Transfer",
+          tag: "outstation",
         },
         {
           id: "6",
           preview: Preview6,
-          title: "lemons",
-          tag: "branding",
+          title: "Premium Sedan",
+          tag: "suv",
         },
       ],
       // PORTFOLIO GALLERY WILL LOAD THIS AFTER FUNCTION "filterGallery" FINISH FILTERING
@@ -72,7 +72,7 @@ class Portfolio extends React.Component {
     this.filterGallery("all");
   }
 
-  //FILTER PORTFOLIO FUNCTION
+  //FILTER GALLERY FUNCTION (logic unchanged)
   filterGallery = (target) => {
     let projectsArr = [...this.state.projects];
     let result;
@@ -145,7 +145,7 @@ class Portfolio extends React.Component {
     return (
       <div id="portfolio">
         <div className="wrapper">
-          <Title title="WORK SHOWCASE." />
+          <Title title="OUR FLEET." />
           <Row>
             <Col xs={12} sm={12} md={8} lg={9}>
               <div className="portfolio__nav">
@@ -154,19 +154,19 @@ class Portfolio extends React.Component {
                     ALL
                   </li>
                   <li
-                    className={this.state.pickedFilter === "branding" ? "portfolio__nav-active font12" : "font12"}
-                    onClick={() => this.filterGallery("branding")}
+                    className={this.state.pickedFilter === "sedan" ? "portfolio__nav-active font12" : "font12"}
+                    onClick={() => this.filterGallery("sedan")}
                   >
-                    BRANDING
+                    SEDAN
                   </li>
                   <li
-                    className={this.state.pickedFilter === "illustrations" ? "portfolio__nav-active font12" : "font12"}
-                    onClick={() => this.filterGallery("illustrations")}
+                    className={this.state.pickedFilter === "suv" ? "portfolio__nav-active font12" : "font12"}
+                    onClick={() => this.filterGallery("suv")}
                   >
-                    ILLUSTRATIONS
+                    SUV
                   </li>
-                  <li className={this.state.pickedFilter === "web" ? "portfolio__nav-active font12" : "font12"} onClick={() => this.filterGallery("web")}>
-                    WEB
+                  <li className={this.state.pickedFilter === "outstation" ? "portfolio__nav-active font12" : "font12"} onClick={() => this.filterGallery("outstation")}>
+                    OUTSTATION
                   </li>
                 </ul>
               </div>
@@ -183,7 +183,7 @@ class Portfolio extends React.Component {
             {projectsRender}
           </Masonry>
           <Row className="flex-center padding40">
-            <Button label="HAVE WORK FOR US?" target={"contact"} />
+            <Button label="BOOK A RIDE" target={"contact"} />
           </Row>
         </div>
       </div>

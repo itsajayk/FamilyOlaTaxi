@@ -8,6 +8,8 @@ import ContactSocial from './contactInfo/contactSocial';
 import Modal from '../contact-modal/Modal';
 
 import ContactBackground from '../../assets/contact/bg.png';
+// Add a short intro video (place your MP4 at this path or change the import)
+import ContactVideo from '../../assets/contact/ola-ad-vid.mp4';
 
 class Contact extends React.Component {
   constructor(props) {
@@ -37,17 +39,11 @@ class Contact extends React.Component {
       message: this.state.message,
     };
 
-
-
-
     // YOUR EMAIL.JS API KEY IN FORMAT user_xxxxxxxxxxxxxxxxxx
     let API_KEY = "";
 
     // YOUR EMAIL.JS TEMPLATE ID
     let TEMPLATE_ID = "";
-
-
-
 
     emailjs.send("default_service", TEMPLATE_ID, template_params, API_KEY).then(
       function (response) {
@@ -115,19 +111,19 @@ class Contact extends React.Component {
         <div className="wrapper">
           <Title title="CONTACT US." />
           <p className="font12">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt<br></br>ut labore et dolore magna aliqua.
+            Need a reliable ride in Mayiladuthurai? Family Ola Taxi is here for you — 24/7 local and outstation services with experienced drivers and clean vehicles. Use the form below or call us directly for quick bookings and enquiries.
           </p>
 
           <Row className="padding40">
             <Col md={12} lg={6}>
               <form id="contact-form" onSubmit={this.handleSubmit}>
-                <h4 className="font30 weight800 padding30">Send Us Message.</h4>
+                <h4 className="font30 weight800 padding30">Send Us a Message</h4>
                 <input type="text" placeholder="Name" required name="name" value={this.state.name} onChange={this.inputHandler} />
                 <input type="email" placeholder="Email" required name="email" value={this.state.email} onChange={this.inputHandler} />
                 <textarea
                   rows="6"
                   cols="50"
-                  placeholder="Message..."
+                  placeholder="Message... (trip details, pickup time, contact number)"
                   required
                   name="message"
                   value={this.state.message}
@@ -138,7 +134,12 @@ class Contact extends React.Component {
             </Col>
             <Col md={12} lg={6}>
               <div className="flex-center">
-                <img src={ContactBackground} alt="contact background" />
+                <div className="video-wrapper">
+                  <video controls playsInline preload="metadata">
+                    <source src={ContactVideo} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
             </Col>
           </Row>
