@@ -7,6 +7,7 @@ import LogoImg from '../../assets/navbar/logo.svg';
 import MobileMenuIcon from '../../assets/navbar/mobile-menu.svg';
 
 const desktopNav = (props) => (
+  
   <nav className={`Navbar ${!props.userIsScrolled ? "extraLargeNavbar" : ""}`}>
     <div className="wrapper flex-s-between">
       <div>
@@ -20,9 +21,9 @@ const desktopNav = (props) => (
       <div className="desktop__menu">
         <ul className="flex-s-between">
           <li>
-            <Link activeClass="active-link" to="portfolio" spy={true} smooth={true} offset={-70} duration={500}>
-              WORK
-            </Link>
+              {/* <Link activeClass="active-link" to="portfolio" spy={true} smooth={true} offset={-70} duration={500}>
+                WORK
+              </Link> */}
           </li>
           <li>
             <Link activeClass="active-link" to="about" spy={true} smooth={true} offset={-70} duration={500}>
@@ -30,9 +31,9 @@ const desktopNav = (props) => (
             </Link>
           </li>
           <li>
-            <Link activeClass="active-link" to="blog" spy={true} smooth={true} offset={-70} duration={500}>
+            {/* <Link activeClass="active-link" to="blog" spy={true} smooth={true} offset={-70} duration={500}>
               BLOG
-            </Link>
+            </Link> */}
           </li>
           <li>
             <Link activeClass="active-link" to="contact" spy={true} smooth={true} offset={-70} duration={500}>

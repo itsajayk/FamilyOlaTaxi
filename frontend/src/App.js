@@ -12,6 +12,7 @@ import About from "./components/about/about";
 import Blog from "./components/blog/blog";
 import Contact from "./components/contact/contact";
 import Footer from "./components/footer/footer";
+import TickerPortal from './components/ticker/TickerPortal.jsx';
  
 class App extends React.Component {
   state = {
@@ -21,6 +22,7 @@ class App extends React.Component {
 
   componentDidMount() {
     window.addEventListener("scroll", this.userIsScrolled);
+    
   }
   componentWillUnmount() {
     window.removeEventListener("scroll", this.userIsScrolled);
@@ -61,6 +63,7 @@ class App extends React.Component {
 
     return (
       <div className="App">
+          {/* <TickerPortal /> */}
         {mobileNavbar}
         {backdrop}
         <DesktopNav
@@ -68,7 +71,7 @@ class App extends React.Component {
           mobileMenuOpen={this.mobileMenuOpen}
         />
         <Hero />
-        <Portfolio />
+        {/* <Portfolio /> */}
         {/* <Partners /> */}
         <About />
         {/* <Blog /> */}

@@ -6,8 +6,15 @@ import "./footer.scss";
 import Logo from '../../assets/footer/logo.svg';
 import Arrow from '../../assets/footer/arrow.svg';
 
+// icons for fixed buttons
+import { FaWhatsapp, FaPhone } from "react-icons/fa";
+
 const Footer = () => {
   const year = new Date().getFullYear();
+
+  // prefilled WhatsApp message (URL encoded)
+  const WA_MSG = encodeURIComponent("Hello, I'm interested in booking a ride with Family Ola Taxi.");
+  const WA_LINK = `https://api.whatsapp.com/send?phone=919524735812&text=${WA_MSG}`;
 
   return (
     <footer className="footer">
@@ -48,6 +55,30 @@ const Footer = () => {
           </Col>
         </Row>
       </div>
+
+      {/* ---------- Fixed contact buttons (WhatsApp + Phone) ---------- */}
+      <div className="fixed-contact" aria-hidden={false}>
+        <a
+          className="fixed-btn whatsapp"
+          href={WA_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp Family Ola 9524735812"
+          title="Chat on WhatsApp — 95247 35812"
+        >
+          <FaWhatsapp />
+        </a>
+
+        <a
+          className="fixed-btn phone"
+          href="tel:+919524735812"
+          aria-label="Call Family Ola 9524735812"
+          title="Call 95247 35812"
+        >
+          <FaPhone />
+        </a>
+      </div>
+      {/* ------------------------------------------------------------- */}
     </footer>
   );
 };

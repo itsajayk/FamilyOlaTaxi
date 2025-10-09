@@ -677,12 +677,34 @@ const BookingForm = ({ className = "" }) => {
 /* ---------------- Hero (carousel + booking) ---------------- */
 const Hero = () => {
   const slides = [
-    { id: 1, img: HeroImage1, title: "Family OLA Taxi Awaits!", subtitle: "Ride Anytime, Anywhere — Hassle-Free." },
-    { id: 2, img: HeroImage2, title: "Safe. Clean. Reliable.", subtitle: "Airport pickups, hourly hires, and city rides." },
-    { id: 3, img: HeroImage3, title: "Your Ride, Your Comfort.", subtitle: "Travel in style with premium vehicles at your service." },
-    { id: 4, img: HeroImage4, title: "Quick and Easy Booking.", subtitle: "Reserve your ride in seconds — no hassle, no wait." },
+    {
+      id: 1,
+      img: HeroImage1,
+      title: "Family Ola Taxi — Mayiladuthurai",
+      subtitle: "24/7 local & outstation rides — safe, punctual, affordable."
+    },
+    {
+      id: 2,
+      img: HeroImage2,
+      title: "Trusted Drivers, Clean Cars",
+      subtitle: "Experienced, family-friendly drivers for every journey."
+    },
+    {
+      id: 3,
+      img: HeroImage3,
+      title: "Airport & Outstation Transfers",
+      subtitle: "Timely airport pickups and comfortable long-distance trips."
+    },
+    {
+      id: 4,
+      img: HeroImage4,
+      title: "Book Instantly",
+      subtitle: "Call 95247 35812 or 95148 35812 — reserve online in seconds."
+    },
   ];
+
   const [index, setIndex] = useState(0);
+
 
   useEffect(() => {
     const t = setInterval(() => setIndex((i) => (i + 1) % slides.length), 5000);

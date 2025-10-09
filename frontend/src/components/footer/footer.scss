@@ -106,3 +106,60 @@
   .phones { justify-content: center; }
 }
 // 
+
+/* Replace/append to your existing .fixed-contact / .fixed-btn rules */
+.fixed-contact {
+  position: fixed !important;
+  right: 18px !important;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+  display: flex !important;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* shared button styles */
+.fixed-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.22);
+  transition: transform .18s ease, background .18s ease, color .18s ease;
+  border: .5px solid transparent;
+  animation: pulse 1.6s infinite;
+  font-size: 0; /* hide any extra text */
+}
+
+/* whatsapp button */
+.fixed-btn.whatsapp {
+  background: #25D366;
+  &:hover { background: #fff; color: #25D366; border-color: #25D366; }
+  svg { width: 26px; height: 26px; }
+}
+
+/* phone button */
+.fixed-btn.phone {
+  background: #0b84ff;
+  &:hover { background: #fff; color: #0b84ff; border-color: #0b84ff; }
+  svg { width: 20px; height: 20px; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+/* force visible on small screens */
+@media (max-width: 860px) {
+  .fixed-contact { right: 14px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+  .fixed-btn { width: 50px; height: 50px; }
+}
