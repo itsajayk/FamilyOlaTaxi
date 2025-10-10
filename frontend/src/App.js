@@ -13,6 +13,8 @@ import Blog from "./components/blog/blog";
 import Contact from "./components/contact/contact";
 import Footer from "./components/footer/footer";
 import TickerPortal from './components/ticker/TickerPortal.jsx';
+import Tariffs from './components/tariffs/Tariffs.jsx';
+import Terms from './components/terms/Terms.jsx';
  
 class App extends React.Component {
   state = {
@@ -74,8 +76,10 @@ class App extends React.Component {
         {/* <Portfolio /> */}
         {/* <Partners /> */}
         <About />
-        {/* <Blog /> */}
+        <Tariffs/>
+        <Blog />
         <Contact />
+        <Terms/>
         <Footer />
       </div>
     );

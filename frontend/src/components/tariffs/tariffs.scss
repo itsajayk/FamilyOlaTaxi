@@ -1,0 +1,150 @@
+@import '../../style/App.scss';
+
+.tariffs-page {
+  padding: 70px 0 100px;
+  background: $light-color;
+
+  .wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 18px;
+  }
+
+  .tariffs-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+
+    .tabs {
+      display: inline-flex;
+      gap: 12px;
+      button {
+        padding: 10px 26px;
+        border-radius: 6px;
+        border: none;
+        background: #efefef;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.18s ease;
+      }
+      button.active {
+        background: #f3b400; /* yellow like screenshot */
+        color: #111;
+      }
+    }
+
+    .min-kms {
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-align: center;
+      padding: 8px 18px;
+      background: transparent;
+    }
+  }
+
+  .tariff-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 10px;
+  }
+
+  .tariff-card {
+    background: #2b2f44; /* navy card background like screenshot */
+    color: #fff;
+    border-radius: 6px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+
+    .tariff-left {
+      flex: 0 0 160px;
+      img {
+        width: 160px;
+        height: auto;
+        display: block;
+      }
+    }
+
+    .tariff-right {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .tariff-header {
+        h3 {
+          margin: 0;
+          color: #f3b400;
+          font-weight: 900;
+          font-size: 18px;
+          letter-spacing: 0.6px;
+        }
+      }
+
+      .tariff-details {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+
+        .detail-row {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          .label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.85);
+            text-align: right;
+            min-width: 110px;
+          }
+          .value {
+            font-weight: 800;
+            font-size: 13px;
+            color: #fff;
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+
+  /* Responsive: stack image on top on small screens */
+  @media (max-width: 880px) {
+    .tariff-card {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 14px;
+
+      .tariff-left {
+        flex: 0 0 auto;
+        text-align: center;
+        img { width: 140px; margin: 0 auto; }
+      }
+      .tariff-right {
+        align-items: flex-start;
+        .tariff-details {
+          align-items: flex-start;
+          margin-top: 8px;
+          .detail-row .label { min-width: 140px; }
+        }
+      }
+    }
+    .tariffs-controls {
+      .min-kms { order: 3; width: 100%; margin-top: 8px; text-align: center; }
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 22px 0;
+    .tariff-card {
+      .tariff-left img { width: 120px; }
+      .tariff-right .tariff-header h3 { font-size: 16px; }
+    }
+  }
+}

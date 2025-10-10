@@ -77,6 +77,16 @@ const mobileNav = (props) => (
             CONTACT
           </Link>
         </li>
+        <li>
+                    <Link activeClass="active-link" to="tariffs" spy={true} smooth={true} offset={-70} duration={500}>
+                      TARIFFS
+                    </Link>
+                  </li>
+                   <li>
+                              <Link activeClass="active-link" to="terms" spy={true} smooth={true} offset={-70} duration={500}>
+                                TERMS
+                              </Link>
+                            </li>
       </ul>
     </div>
   </div>
