@@ -680,7 +680,7 @@ const Hero = () => {
     {
       id: 1,
       img: HeroImage1,
-      title: "Family Ola Taxi — Mayiladuthurai",
+      title: "Family OLA Taxi Tours & Travels",
       subtitle: "24/7 local & outstation rides — safe, punctual, affordable."
     },
     {

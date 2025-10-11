@@ -15,55 +15,87 @@ import Preview06 from "../../assets/blog/story06/preview.png";
 // Components
 import Title from "../ui-components/title/title";
 import BlogBox from "./blogBox";
+import {
+  FaClock,
+  FaTaxi,
+  FaRoad,
+  FaPlane,
+  FaAmbulance,
+  FaHourglassHalf,
+  FaArrowRight,
+  FaExchangeAlt,
+  FaMapMarkedAlt
+} from "react-icons/fa";
 
 class Blog extends React.Component {
   state = {
-    // LIST ARRAY OF BLOG STORIES
-    stories: [
-      {
-        image: Preview01,
-        id: "1",
-        title: "SUPER BLOG ARTICLE!",
-        description: "Lorem ipsum dolor sit amet, consectetur undo thes tabore et dolore magna aliqua.",
-        date: "21 April 2020",
-      },
-      {
-        image: Preview02,
-        id: "2",
-        title: "AWESOME ARTICLE!",
-        description: "Lorem ipsum dolor undo thes tabore et dolore magna aliqua.",
-        date: "27 April 2020",
-      },
-      {
-        image: Preview03,
-        id: "3",
-        title: "SUPER TITLE!",
-        description: "Lorem tabore et dolore magna aliqua ipsum dolor undo thes.",
-        date: "03 May 2020",
-      },
-      {
-        image: Preview04,
-        id: "4",
-        title: "BLOG TITLE!",
-        description: "Lorem tabore et dolore magna aliqua ipsum dolor undo thes.",
-        date: "15 May 2020",
-      },
-      {
-        image: Preview05,
-        id: "5",
-        title: "BLOG ARTICLE!",
-        description: "Lorem tabore et dolore magna aliqua ipsum dolor undo thes.",
-        date: "20 May 2020",
-      },
-      {
-        image: Preview06,
-        id: "6",
-        title: "AWESOME TITLE!",
-        description: "Lorem tabore et dolore magna aliqua ipsum dolor undo thes.",
-        date: "23 May 2020",
-      },
-    ],
-  };
+  stories: [
+    {
+      id: "1",
+      icon: FaClock,
+      title: "24x7 Cab Booking Services",
+      description: "Whether it’s early morning or late night, our cabs are always ready to go.",
+      date: "",
+    },
+    {
+      id: "2",
+      icon: FaTaxi,
+      title: "Local City Rides",
+      description: "Quick and comfortable trips within the city, anytime you need.",
+      date: "",
+    },
+    {
+      id: "3",
+      icon: FaRoad,
+      title: "Outstation Rides",
+      description: "Safe and affordable long-distance travel to your favourite destinations.",
+      date: "",
+    },
+    {
+      id: "4",
+      icon: FaPlane,
+      title: "Airport Transfers",
+      description: "On-time pick-up and drop service for hassle-free airport travel.",
+      date: "",
+    },
+    {
+      id: "5",
+      icon: FaAmbulance,
+      title: "Medical Trips",
+      description: "10% concession on the overall fare for medical-related trips.",
+      date: "",
+    },
+    {
+      id: "6",
+      icon: FaHourglassHalf,
+      title: "Hourly Rental",
+      description: "Book a cab by the hour and travel freely to multiple stops.",
+      date: "",
+    },
+    {
+      id: "7",
+      icon: FaArrowRight,
+      title: "One-Way Trips",
+      description: "Pay only for the distance you travel with our economical one-way service.",
+      date: "",
+    },
+    {
+      id: "8",
+      icon: FaExchangeAlt,
+      title: "Round Trips",
+      description: "Convenient return rides for your day-long or weekend travel plans.",
+      date: "",
+    },
+    {
+      id: "9",
+      icon: FaMapMarkedAlt,
+      title: "Tour Packages",
+      description: "Explore nearby attractions with our curated sightseeing and holiday cab packages.",
+      date: "",
+    },
+  ],
+};
+
 
   render() {
     // BLOG STORIES RENDER
@@ -78,9 +110,12 @@ class Blog extends React.Component {
     return (
       <div className="blog" id="blog">
         <div className="wrapper">
-          <Title title="OUR BLOG." />
+          <Title title="Our Services" />
           <p className="font12">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt<br />ut labore et dolore magna aliqua.
+            Welcome to Family OLA Taxi Tours and Travels, your trusted travel
+            partner for every journey. We offer reliable, safe, and affordable cab
+            services across the city and beyond. Book instantly and enjoy
+            comfortable rides with professional drivers — anytime, anywhere.
           </p>
           <div className="padding30">
             {/* CHANGED: replaced Swiper with responsive CSS Grid */}

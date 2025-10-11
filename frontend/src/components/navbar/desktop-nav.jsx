@@ -27,7 +27,7 @@ const desktopNav = (props) => (
           </li> */}
           <li>
             <Link activeClass="active-link" to="about" spy={true} smooth={true} offset={-70} duration={500}>
-              ABOUT
+              ABOUT US
             </Link>
           </li>
           <li>
@@ -35,14 +35,14 @@ const desktopNav = (props) => (
               TARIFFS
             </Link>
           </li>
-          {/* <li>
+          <li>
              <Link activeClass="active-link" to="blog" spy={true} smooth={true} offset={-70} duration={500}>
               BLOG
             </Link> 
-          </li> */}
+          </li>
           <li>
             <Link activeClass="active-link" to="contact" spy={true} smooth={true} offset={-70} duration={500}>
-              CONTACT
+              CONTACT US
             </Link>
           </li>
           <li>

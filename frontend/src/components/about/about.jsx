@@ -14,7 +14,7 @@ const about = () => (
     <div className="wrapper">
       <Title title="ABOUT US." />
       <p className="font12">
-              Family Ola Taxi is your trusted local travel partner based in
+              Family OLA Taxi Tours & Travels. is your trusted local travel partner based in
         <strong> Mayiladuthurai</strong>, offering safe, reliable, and
         comfortable rides for individuals and families. With years of service
         excellence, we specialize in both in-town and outstation trips,

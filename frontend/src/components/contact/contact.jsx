@@ -111,7 +111,7 @@ class Contact extends React.Component {
         <div className="wrapper">
           <Title title="CONTACT US." />
           <p className="font12">
-            Need a reliable ride in Mayiladuthurai? Family Ola Taxi is here for you — 24/7 local and outstation services with experienced drivers and clean vehicles. Use the form below or call us directly for quick bookings and enquiries.
+            Need a reliable ride in Mayiladuthurai? Family OLA Taxi Tours & Travels. is here for you — 24/7 local and outstation services with experienced drivers and clean vehicles. Use the form below or call us directly for quick bookings and enquiries.
           </p>
 
           <Row className="padding40">
