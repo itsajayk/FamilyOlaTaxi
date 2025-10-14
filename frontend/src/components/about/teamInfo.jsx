@@ -9,7 +9,7 @@ const about = () => (
       <p className="font12 weight500">
         Our drivers are experienced, polite, and committed to providing a
         pleasant travel experience. Whether you need airport transfers,
-        business trips, or family tours, <strong>Family OLA Taxi Tours & Travels</strong> is
+        business trips, or family tours, <strong>Family OLA taxi tours & Droptaxi</strong> is
         always ready to serve you — anytime, anywhere.
       </p>
       <p className="font12 weight500">Read More</p>

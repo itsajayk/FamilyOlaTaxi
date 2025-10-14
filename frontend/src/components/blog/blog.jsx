@@ -112,7 +112,7 @@ class Blog extends React.Component {
         <div className="wrapper">
           <Title title="Our Services" />
           <p className="font12">
-            Welcome to Family OLA Taxi Tours and Travels, your trusted travel
+            Welcome to Family OLA taxi tours & Droptaxi, your trusted travel
             partner for every journey. We offer reliable, safe, and affordable cab
             services across the city and beyond. Book instantly and enjoy
             comfortable rides with professional drivers — anytime, anywhere.

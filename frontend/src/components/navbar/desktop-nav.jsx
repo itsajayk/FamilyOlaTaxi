@@ -37,7 +37,7 @@ const desktopNav = (props) => (
           </li>
           <li>
              <Link activeClass="active-link" to="blog" spy={true} smooth={true} offset={-70} duration={500}>
-              BLOG
+              SERVICES
             </Link> 
           </li>
           <li>

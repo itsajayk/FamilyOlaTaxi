@@ -61,7 +61,7 @@ const mobileNav = (props) => (
             duration={500}
             onClick={props.closeMobileMenu}
           >
-            BLOG
+            Services
           </Link>
         </li>
         <li className="flex-center">
@@ -77,16 +77,32 @@ const mobileNav = (props) => (
             CONTACT
           </Link>
         </li>
-        <li>
-                    <Link activeClass="active-link" to="tariffs" spy={true} smooth={true} offset={-70} duration={500}>
-                      TARIFFS
-                    </Link>
-                  </li>
-                   <li>
-                              <Link activeClass="active-link" to="terms" spy={true} smooth={true} offset={-70} duration={500}>
-                                TERMS
-                              </Link>
-                            </li>
+        <li className="flex-center">
+          <Link
+            activeClass="active-link"
+            to="tariffs"
+            spy={true}
+            smooth={true}
+            offset={-70}
+            duration={500}
+            onClick={props.closeMobileMenu}
+          >
+            TARIFFS
+          </Link>
+        </li>
+        <li className="flex-center">
+          <Link
+            activeClass="active-link"
+            to="terms"
+            spy={true}
+            smooth={true}
+            offset={-70}
+            duration={500}
+            onClick={props.closeMobileMenu}
+          >
+            TERMS
+          </Link>
+        </li>
       </ul>
     </div>
   </div>

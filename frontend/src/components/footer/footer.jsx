@@ -13,7 +13,7 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   // prefilled WhatsApp message (URL encoded)
-  const WA_MSG = encodeURIComponent("Hello, I'm interested in booking a ride with Family Ola Taxi.");
+  const WA_MSG = encodeURIComponent("Hello, I'm interested in booking a ride with Family OLA taxi tours & Droptaxi.");
   const WA_LINK = `https://api.whatsapp.com/send?phone=919524735812&text=${WA_MSG}`;
 
   return (

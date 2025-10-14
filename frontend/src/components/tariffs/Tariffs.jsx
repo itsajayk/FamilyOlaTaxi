@@ -4,10 +4,10 @@ import Title from "../ui-components/title/title";
 import "./tariffs.scss";
 
 // Replace the imports below with the actual car images in your project
-import Car01 from "../../assets/portfolio/project01/preview-01.jpg";
+import Car01 from "../../assets/portfolio/project01/Sedan.jpg";
 import Car02 from "../../assets/portfolio/project02/preview-02.jpg";
 import Car03 from "../../assets/portfolio/project03/preview-03.jpg";
-import Car04 from "../../assets/portfolio/project06/preview-06.webp";
+import Car04 from "../../assets/portfolio/project06/innova.webp";
 
 const vehicles = [
   {
