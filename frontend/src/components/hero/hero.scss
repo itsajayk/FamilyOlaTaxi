@@ -194,7 +194,7 @@ $shadow: 0 10px 30px rgba(2,6,23,0.12);
  }
 
  .hero-carousel .hero-content {
-   color: #fff;
+   color: #ffe600;
    max-width: 540px;
  }
 
@@ -289,3 +289,64 @@ $shadow: 0 10px 30px rgba(2,6,23,0.12);
 /* If you used inline style for input padding-right, you can remove it and instead use below:
 .input-with-actions input { padding-right: 110px; }
 */
+/* CHANGED: spinner for button */
+.btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: rgba(255,255,255,0.95);
+  margin-right: 8px;
+  vertical-align: middle;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* CHANGED: faint overlay spinner while loading the whole booking card */
+.booking-loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+  border-radius: 10px;
+}
+.overlay-spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid rgba(0,0,0,0.08);
+  border-top-color: rgba(0,0,0,0.6);
+  animation: spin 1s linear infinite;
+}
+
+/* CHANGED: simple success modal */
+.success-modal {
+  position: fixed;
+  left: 50%;
+  top: 18%;
+  transform: translateX(-50%);
+  z-index: 120;
+  background: white;
+  box-shadow: 0 8px 30px rgba(2,6,23,0.18);
+  padding: 18px;
+  border-radius: 10px;
+  width: min(420px, 92%);
+}
+.success-modal-inner h4 {
+  margin: 0 0 6px 0;
+  font-size: 18px;
+}
+.success-modal-inner p {
+  margin: 0;
+  color: #243a57;
+}
+
+/* CHANGED: ensure hero big title is stronger (optional) */
+.hero .hero-content h1.weight800 {
+  // color: #0b3d91;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.03);
+}

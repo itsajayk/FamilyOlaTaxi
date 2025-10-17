@@ -93,54 +93,60 @@ const MapPicker = ({ initialPos = [11.0, 78.0], onSelect, closeModal }) => {
   const [results, setResults] = useState([]);
 
   // create map after small delay so modal animation completes
-  useEffect(() => {
+useEffect(() => {
+  if (!containerRef.current) return;
+
+  // small delay ensures modal/animation has revealed container (fixes tiles not showing)
+  initTimeoutRef.current = setTimeout(() => {
+    // CHANGED: ensure container still exists when timeout fires
     if (!containerRef.current) return;
 
-    // small delay ensures modal/animation has revealed container (fixes tiles not showing)
-    initTimeoutRef.current = setTimeout(() => {
-      mapRef.current = L.map(containerRef.current, {
-        center: initialPos,
-        zoom: 12,
-        attributionControl: false,
-      });
+    mapRef.current = L.map(containerRef.current, {
+      center: initialPos,
+      zoom: 12,
+      attributionControl: false,
+    });
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap contributors",
-        maxZoom: 19,
-      }).addTo(mapRef.current);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+      maxZoom: 19,
+    }).addTo(mapRef.current);
 
-      // ensure tiles repaint properly
-      setTimeout(() => {
-        try { mapRef.current.invalidateSize(); } catch (e) {}
-      }, 150);
+    // ensure tiles repaint properly
+    setTimeout(() => {
+      try { if (mapRef.current) mapRef.current.invalidateSize(); } catch (e) {}
+    }, 150);
 
-      const onMapClick = async (e) => {
-        const lat = e.latlng.lat;
-        const lng = e.latlng.lng;
-        setMarkerOnMap([lat, lng]);
-        const addr = await reverseGeocode(lat, lng);
-        setAddress(addr);
-        setResults([]);
-      };
-      mapRef.current.on("click", onMapClick);
+    const onMapClick = async (e) => {
+      const lat = e.latlng.lat;
+      const lng = e.latlng.lng;
+      setMarkerOnMap([lat, lng]);
+      const addr = await reverseGeocode(lat, lng);
+      setAddress(addr);
+      setResults([]);
+    };
+    mapRef.current.on("click", onMapClick);
 
-      // cleanup
-      return () => {
+    // cleanup
+    return () => {
+      if (mapRef.current) {
         mapRef.current.off("click", onMapClick);
         try { mapRef.current.remove(); } catch (e) {}
         mapRef.current = null;
-      };
-    }, 120);
-
-    return () => {
-      clearTimeout(initTimeoutRef.current);
-      if (mapRef.current) {
-        try { mapRef.current.remove(); } catch {}
-        mapRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [containerRef]);
+  }, 120);
+
+  return () => {
+    clearTimeout(initTimeoutRef.current);
+    if (mapRef.current) {
+      try { mapRef.current.remove(); } catch {}
+      mapRef.current = null;
+    }
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [containerRef]);
+
 
   // helper to add marker
   const setMarkerOnMap = (pos) => {
@@ -291,8 +297,7 @@ const doSearch = async (q) => {
   );
 };
 
-/* ---------------- BookingForm (with inline search suggestions) ---------------- */
-/* ---------------- BookingForm (with inline search suggestions) ---------------- */
+
 const BookingForm = ({ className = "" }) => {
   const [tripType, setTripType] = useState("One-way");
   const [cabType, setCabType] = useState("Sedan");
@@ -301,11 +306,14 @@ const BookingForm = ({ className = "" }) => {
   const [pickupDateTime, setPickupDateTime] = useState("");
   const [loading, setLoading] = useState(false);
   const [modalFor, setModalFor] = useState(null);
+    // CHANGED: success modal + timeout ref
+  const [successModal, setSuccessModal] = useState({ open: false, ref: null });
+  const successTimeoutRef = useRef(null);
 
-  // ADDED: Local package state + list
-  // CHANGED: added state for selected local package
-  const [localPackage, setLocalPackage] = useState(""); // ADDED
-  const LOCAL_PACKAGES = [ // ADDED
+
+  // ADDED: Local package + list
+  const [localPackage, setLocalPackage] = useState("");
+  const LOCAL_PACKAGES = [
     "Navagraha temple",
     "108 Divya Desam Temples",
     "Mayiladuthurai – Chidambaram",
@@ -322,10 +330,14 @@ const BookingForm = ({ className = "" }) => {
   const [pickupActive, setPickupActive] = useState(-1);
   const [dropActive, setDropActive] = useState(-1);
 
-  const searchTimerRef = useRef(null);
-  const API_BASE = process.env.REACT_APP_API_BASE || "/api";
+  // ADDED: refs to input fields to blur after selection
+  const pickupInputRef = useRef(null); // ADDED
+  const dropInputRef = useRef(null);   // ADDED
 
-  // debounced search helper (shared)
+  const searchTimerRef = useRef(null);
+  const API_BASE = "http://localhost:5000/api";
+
+  // debounced search helper (same as before)
   const searchNominatim = (q, setResults) => {
     clearTimeout(searchTimerRef.current);
     if (!q) {
@@ -334,23 +346,27 @@ const BookingForm = ({ className = "" }) => {
     }
     searchTimerRef.current = setTimeout(async () => {
       try {
-        // 1) Photon (TN bbox)
         let results = await photonSearch(q, TN_BBOX, 6);
         if (results && results.length) return setResults(results);
 
-        // 2) fallback to Nominatim TN
         results = await nominatimSearchTN(q, 6);
         if (results && results.length) return setResults(results);
 
-        // 3) final fallback: Photon global
         results = await photonSearch(q, null, 6);
         setResults(results || []);
       } catch (err) {
         console.error("search", err);
         setResults([]);
       }
-    }, 300); // debounce
+    }, 300);
   };
+
+    useEffect(() => {
+    return () => {
+      clearTimeout(searchTimerRef.current);
+      clearTimeout(successTimeoutRef.current);
+    };
+  }, []);
 
   useEffect(() => { searchNominatim(pickupQuery, setPickupSuggestions); setPickupActive(-1); }, [pickupQuery]);
   useEffect(() => { searchNominatim(dropQuery, setDropSuggestions); setDropActive(-1); }, [dropQuery]);
@@ -370,54 +386,87 @@ const BookingForm = ({ className = "" }) => {
     }
   };
 
-  const onSuggestionSelect = (which, r) => {
+    const onSuggestionSelect = (which, r) => {
+    // CHANGED: ensure pending search timer cancelled and dropdown closed immediately
+    clearTimeout(searchTimerRef.current);
+
     const lat = parseFloat(r.lat), lng = parseFloat(r.lon), addr = r.display_name;
     const payload = { address: addr, lat, lng };
-    if (which === "pickup") {
-      setPickup(payload); setPickupQuery(addr); setPickupSuggestions([]); setPickupActive(-1);
+
+    if (which === 'pickup') {
+      setPickup(payload);
+      setPickupQuery(addr);
+      setPickupSuggestions([]);
+      setPickupActive(-1);
+      // blur input after event cycle so the dropdown hides immediately
+      setTimeout(() => { if (pickupInputRef.current) pickupInputRef.current.blur(); }, 0);
     } else {
-      setDrop(payload); setDropQuery(addr); setDropSuggestions([]); setDropActive(-1);
+      setDrop(payload);
+      setDropQuery(addr);
+      setDropSuggestions([]);
+      setDropActive(-1);
+      setTimeout(() => { if (dropInputRef.current) dropInputRef.current.blur(); }, 0);
     }
   };
 
+
   const validate = () => {
-    if (!pickup.address || !drop.address || !pickupDateTime) {
-      alert("Please fill pickup, drop and pickup date/time");
+    // CHANGED: allow Local Packages to be submitted without pickup/drop
+    if (tripType !== "Local Packages") {
+      if (!pickup.address || !drop.address) {
+        alert("Please fill pickup and drop locations (or choose Local Packages).");
+        return false;
+      }
+    }
+    if (!pickupDateTime) {
+      alert("Please fill pickup date/time");
       return false;
     }
-    // ADDED: require local package selection when tripType is Local Packages
-    if (tripType === "Local Packages" && !localPackage) { // ADDED
-      alert("Please select a Local Package."); // ADDED
-      return false; // ADDED
-    } // ADDED
+    if (tripType === "Local Packages" && !localPackage) {
+      alert("Please select a Local Package.");
+      return false;
+    }
     return true;
   };
 
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
     const payload = {
       tripType, cabType,
-      pickupLocation: pickup, dropLocation: drop,
+      pickupLocation: tripType === "Local Packages" ? (pickup.address ? pickup : null) : pickup,
+      dropLocation: tripType === "Local Packages" ? (drop.address ? drop : null) : drop,
       pickupDateTime, createdAt: new Date().toISOString(),
-      // CHANGED: include chosen localPackage (if any)
-      localPackage: tripType === "Local Packages" ? localPackage : null, // CHANGED
+      localPackage: tripType === "Local Packages" ? localPackage : null,
     };
     try {
       const res = await axios.post(`${API_BASE.replace(/\/$/, "")}/bookings`, payload);
-      alert("Booking submitted! Ref: " + (res.data._id || "n/a"));
+
+      // CHANGED: show success modal instead of alert
+      const refId = (res?.data?._id) || (res?.data?.id) || null;
+      setSuccessModal({ open: true, ref: refId });
+
+      // auto close after 3.5s
+      clearTimeout(successTimeoutRef.current);
+      successTimeoutRef.current = setTimeout(() => setSuccessModal({ open: false, ref: null }), 3500);
+
       // reset form
-      setPickup({ address: "", lat: null, lng: null }); setDrop({ address: "", lat: null, lng: null });
+      setPickup({ address: "", lat: null, lng: null });
+      setDrop({ address: "", lat: null, lng: null });
       setPickupQuery(""); setDropQuery(""); setPickupDateTime("");
-      setLocalPackage(""); // ADDED: reset local package selection
+      setLocalPackage("");
+      setPickupSuggestions([]); setDropSuggestions([]);
     } catch (err) {
-      console.error(err);
-      alert("Failed to submit: " + (err.response?.data?.message || err.message));
-    } finally { setLoading(false); }
+      console.error("Booking submit error:", err, err?.response?.data);
+      alert("Failed to submit: " + (err?.response?.data?.message || err?.message || "unknown error"));
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // keyboard handling for pickup input
+
+  // keyboard nav handlers (unchanged)
   const onPickupKeyDown = (e) => {
     if (!pickupSuggestions.length) return;
     if (e.key === "ArrowDown") {
@@ -436,7 +485,6 @@ const BookingForm = ({ className = "" }) => {
     }
   };
 
-  // keyboard handling for drop input
   const onDropKeyDown = (e) => {
     if (!dropSuggestions.length) return;
     if (e.key === "ArrowDown") {
@@ -464,9 +512,12 @@ const BookingForm = ({ className = "" }) => {
           <div className="field">
             <label>Trip Type</label>
             <select value={tripType} onChange={(e) => setTripType(e.target.value)}>
-              <option>One-way</option><option>Round Trip</option><option>Local Packages</option>
+              <option>One-way</option>
+              <option>Round Trip</option>
+              <option>Local Packages</option>
             </select>
           </div>
+
           <div className="field">
             <label>Cab Type</label>
             <select value={cabType} onChange={(e) => setCabType(e.target.value)}>
@@ -476,182 +527,204 @@ const BookingForm = ({ className = "" }) => {
         </div>
 
         {/* ADDED: Local Packages select shown only when Trip Type is Local Packages */}
-        {tripType === "Local Packages" && ( // ADDED
-          <div className="row"> {/* ADDED */}
-            <div className="field"> {/* ADDED */}
-              <label>Select Local Package</label> {/* ADDED */}
-              <select value={localPackage} onChange={(e) => setLocalPackage(e.target.value)}> {/* ADDED */}
-                <option value="">-- Select package --</option> {/* ADDED */}
-                {LOCAL_PACKAGES.map((p, idx) => ( /* ADDED */
-                  <option value={p} key={idx}>{p}</option> /* ADDED */
-                ))} {/* ADDED */}
-              </select> {/* ADDED */}
-              <div className="hint">Choose one of our local sightseeing packages.</div> {/* ADDED */}
-            </div> {/* ADDED */}
-          </div> /* ADDED */
+        {tripType === "Local Packages" && (
+          <div className="row">
+            <div className="field">
+              <label>Select Local Package</label>
+              <select value={localPackage} onChange={(e) => setLocalPackage(e.target.value)}>
+                <option value="">-- Select package --</option>
+                {LOCAL_PACKAGES.map((p, idx) => (<option value={p} key={idx}>{p}</option>))}
+              </select>
+              <div className="hint">Choose one of our local sightseeing packages.</div>
+            </div>
+          </div>
         )}
 
         <div className="row">
-          {/* Pickup with inline search */} 
-          <div className="field full" style={{ position: "relative" }}>
-            <label>Pick-up Location</label>
-
-            <div className="input-with-actions" style={{ position: 'relative' }}>
-              <input
-                aria-label="Pickup address"
-                aria-autocomplete="list"
-                role="combobox"
-                aria-expanded={pickupSuggestions.length > 0}
-                type="text"
-                value={pickupQuery || pickup.address}
-                onChange={(e) => {
-                  setPickupQuery(e.target.value);
-                  setPickup(prev => ({ ...prev, lat: null, lng: null }));
-                }}
-                onKeyDown={onPickupKeyDown}
-                placeholder="Type address or open map"
-                style={{ paddingRight: 110 }} /* leave room for internal controls */
-              />
-
-              {/* inside-input clear button (only shown when input has text) */}
-              {(pickupQuery || pickup.address) && (
-                <button
-                  type="button"
-                  className="input-clear-btn"
-                  aria-label="Clear pickup"
-                  onClick={() => {
-                    setPickup({ address: "", lat: null, lng: null });
-                    setPickupQuery("");
-                    setPickupSuggestions([]);
-                    setPickupActive(-1);
+          {/* Pickup input hidden for Local Packages (CHANGED) */}
+          {tripType !== "Local Packages" && (
+            <div className="field full" style={{ position: "relative" }}>
+              <label>Pick-up Location</label>
+              <div className="input-with-actions" style={{ position: 'relative' }}>
+                <input
+                  id="pickup-input" // CHANGED
+                  ref={pickupInputRef}
+                  aria-label="Pickup address"
+                  aria-autocomplete="list"
+                  role="combobox"
+                  aria-controls="pickup-listbox" // CHANGED
+                  aria-expanded={pickupSuggestions.length > 0}
+                  type="text"
+                  value={pickupQuery || pickup.address}
+                  onChange={(e) => {
+                    setPickupQuery(e.target.value);
+                    setPickup(prev => ({ ...prev, lat: null, lng: null }));
                   }}
-                  title="Clear"
-                >×</button>
-              )}
+                  onKeyDown={onPickupKeyDown}
+                  placeholder="Type address or open map"
+                  style={{ paddingRight: 110 }}
+                />
 
-              {/* action buttons sit to the right (kept visually outside input but inside actions area) */}
-              <div className="actions" style={{ right: 10, position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}>
-                <button type="button" className="map-btn" onClick={() => openMap("pickup")} title="Open map">📍</button>
-                <button type="button" className="loc-btn" onClick={() => {
-                  if (!navigator.geolocation) return alert("Geolocation not supported");
-                  navigator.geolocation.getCurrentPosition((p) => {
-                    const lat = p.coords.latitude, lng = p.coords.longitude;
-                    const addr = `My Location (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
-                    setPickup({ address: addr, lat, lng });
-                    setPickupQuery(addr);
-                  }, () => alert("Unable to fetch location"));
-                }} title="Use my location">📡</button>
+                {(pickupQuery || pickup.address) && (
+                  <button type="button" className="input-clear-btn" aria-label="Clear pickup"
+                    onClick={() => { setPickup({ address: "", lat: null, lng: null }); setPickupQuery(""); setPickupSuggestions([]); setPickupActive(-1); }}>
+                    ×
+                  </button>
+                )}
+                <div className="actions" style={{ right: 10, position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}>
+                  <button type="button" className="map-btn" onClick={() => openMap("pickup")} title="Open map">📍</button>
+                  <button type="button" className="loc-btn" onClick={() => {
+                    if (!navigator.geolocation) return alert("Geolocation not supported");
+                    navigator.geolocation.getCurrentPosition((p) => {
+                      const lat = p.coords.latitude, lng = p.coords.longitude;
+                      const addr = `My Location (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+                      setPickup({ address: addr, lat, lng });
+                      setPickupQuery(addr);
+                    }, () => alert("Unable to fetch location"));
+                  }} title="Use my location">📡</button>
+                </div>
               </div>
+
+              {pickupSuggestions && pickupSuggestions.length > 0 && (
+                <ul id="pickup-listbox" className="inline-suggestions stylish-dropdown" role="listbox" aria-label="Pickup suggestions">
+                  {pickupSuggestions.map((r, i) => (
+                    <li key={r.place_id}
+                        role="option"
+                        aria-selected={i === pickupActive}
+                        className={i === pickupActive ? "active" : ""}
+                        onMouseEnter={() => setPickupActive(i)}
+                        onMouseLeave={() => setPickupActive(-1)}
+                        onClick={() => onSuggestionSelect('pickup', r)} // CHANGED: use onClick + handler blurs
+                    >
+                      <div className="s-title">{r.display_name.split(',').slice(0,2).join(', ')}</div>
+                      <div className="s-sub muted">{r.type} · {r.display_name.split(',').slice(-2).join(', ')}</div>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
+          )}
 
-            {pickupSuggestions && pickupSuggestions.length > 0 && (
-              <ul className="inline-suggestions stylish-dropdown" role="listbox" aria-label="Pickup suggestions">
-                {pickupSuggestions.map((r, i) => (
-                  <li
-                    key={r.place_id}
-                    role="option"
-                    aria-selected={i === pickupActive}
-                    className={i === pickupActive ? "active" : ""}
-                    onMouseEnter={() => setPickupActive(i)}
-                    onMouseLeave={() => setPickupActive(-1)}
-                    onMouseDown={(ev) => { ev.preventDefault(); onSuggestionSelect('pickup', r); }}
-                  >
-                    <div className="s-title">{r.display_name.split(',').slice(0,2).join(', ')}</div>
-                    <div className="s-sub muted">{r.type} · {r.display_name.split(',').slice(-2).join(', ')}</div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-
-          {/* Drop with inline search (clear button inside input) */}
-          <div className="field full" style={{ position: "relative" }}>
-            <label>Drop Location</label>
-
-            <div className="input-with-actions" style={{ position: 'relative' }}>
-              <input
-                aria-label="Drop address"
-                aria-autocomplete="list"
-                role="combobox"
-                aria-expanded={dropSuggestions.length > 0}
-                type="text"
-                value={dropQuery || drop.address}
-                onChange={(e) => {
-                  setDropQuery(e.target.value);
-                  setDrop(prev => ({ ...prev, lat: null, lng: null }));
-                }}
-                onKeyDown={onDropKeyDown}
-                placeholder="Type address or open map"
-                style={{ paddingRight: 110 }}
-              />
-
-              {/* inside-input clear button (only when input has text) */}
-              {(dropQuery || drop.address) && (
-                <button
-                  type="button"
-                  className="input-clear-btn"
-                  aria-label="Clear drop"
-                  onClick={() => {
-                    setDrop({ address: "", lat: null, lng: null });
-                    setDropQuery("");
-                    setDropSuggestions([]);
-                    setDropActive(-1);
+          {/* Drop input hidden for Local Packages (CHANGED) */}
+          {tripType !== "Local Packages" && (
+            <div className="field full" style={{ position: "relative" }}>
+              <label>Drop Location</label>
+              <div className="input-with-actions" style={{ position: 'relative' }}>
+                <input
+                  ref={dropInputRef} // ADDED
+                  aria-label="Drop address"
+                  aria-autocomplete="list"
+                  role="combobox"
+                  aria-expanded={dropSuggestions.length > 0}
+                  type="text"
+                  value={dropQuery || drop.address}
+                  onChange={(e) => {
+                    setDropQuery(e.target.value);
+                    setDrop(prev => ({ ...prev, lat: null, lng: null }));
                   }}
-                  title="Clear"
-                >×</button>
-              )}
-
-              <div className="actions" style={{ right: 10, position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}>
-                <button type="button" className="map-btn" onClick={() => openMap("drop")} title="Open map">📍</button>
-                <button type="button" className="loc-btn" onClick={() => {
-                  if (!navigator.geolocation) return alert("Geolocation not supported");
-                  navigator.geolocation.getCurrentPosition((p) => {
-                    const lat = p.coords.latitude, lng = p.coords.longitude;
-                    const addr = `My Location (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
-                    setDrop({ address: addr, lat, lng });
-                    setDropQuery(addr);
-                  }, () => alert("Unable to fetch location"));
-                }} title="Use my location">📡</button>
+                  onKeyDown={onDropKeyDown}
+                  placeholder="Type address or open map"
+                  style={{ paddingRight: 110 }}
+                />
+                {(dropQuery || drop.address) && (
+                  <button type="button" className="input-clear-btn" aria-label="Clear drop"
+                    onClick={() => { setDrop({ address: "", lat: null, lng: null }); setDropQuery(""); setDropSuggestions([]); setDropActive(-1); }}>
+                    ×
+                  </button>
+                )}
+                <div className="actions" style={{ right: 10, position: 'absolute', top: '50%', transform: 'translateY(-50%)' }}>
+                  <button type="button" className="map-btn" onClick={() => openMap("drop")} title="Open map">📍</button>
+                  <button type="button" className="loc-btn" onClick={() => {
+                    if (!navigator.geolocation) return alert("Geolocation not supported");
+                    navigator.geolocation.getCurrentPosition((p) => {
+                      const lat = p.coords.latitude, lng = p.coords.longitude;
+                      const addr = `My Location (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+                      setDrop({ address: addr, lat, lng });
+                      setDropQuery(addr);
+                    }, () => alert("Unable to fetch location"));
+                  }} title="Use my location">📡</button>
+                </div>
               </div>
-            </div>
 
-            {dropSuggestions && dropSuggestions.length > 0 && (
-              <ul className="inline-suggestions stylish-dropdown" role="listbox" aria-label="Drop suggestions">
-                {dropSuggestions.map((r, i) => (
-                  <li
-                    key={r.place_id}
-                    role="option"
-                    aria-selected={i === dropActive}
-                    className={i === dropActive ? "active" : ""}
-                    onMouseEnter={() => setDropActive(i)}
-                    onMouseLeave={() => setDropActive(-1)}
-                    onMouseDown={(ev) => { ev.preventDefault(); onSuggestionSelect('drop', r); }}
-                  >
-                    <div className="s-title">{r.display_name.split(',').slice(0,2).join(', ')}</div>
-                    <div className="s-sub muted">{r.type} · {r.display_name.split(',').slice(-2).join(', ')}</div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+              {dropSuggestions && dropSuggestions.length > 0 && (
+                <ul className="inline-suggestions stylish-dropdown" role="listbox" aria-label="Drop suggestions">
+                  {dropSuggestions.map((r, i) => (
+                    <li key={r.place_id}
+                        role="option"
+                        aria-selected={i === dropActive}
+                        className={i === dropActive ? "active" : ""}
+                        onMouseEnter={() => setDropActive(i)}
+                        onMouseLeave={() => setDropActive(-1)}
+                        onClick={() => onSuggestionSelect('drop', r)} // CHANGED => onClick
+                    >
+                      <div className="s-title">{r.display_name.split(',').slice(0,2).join(', ')}</div>
+                      <div className="s-sub muted">{r.type} · {r.display_name.split(',').slice(-2).join(', ')}</div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="row">
           <div className="field">
             <label>Pick-up Date & Time</label>
-            <input type="datetime-local" value={pickupDateTime} onChange={(e) => setPickupDateTime(e.target.value)} />
+            {/* CHANGED: blur to close native picker immediately after selection */}
+            <input
+              type="datetime-local"
+              value={pickupDateTime}
+              onChange={(e) => {
+                setPickupDateTime(e.target.value);
+                // close picker
+                try { e.target.blur(); } catch (e) {}
+              }}
+            />
             <div className="hint">Choose when you want the driver to arrive.</div>
           </div>
 
-          <div className="field actions-right">
-            <label>&nbsp;</label>
-            <Button label={loading ? "Sending..." : "Book Now"} type="submit" />
-          </div>
+          {/* CHANGED: use native button to ensure form submit works */}
+            <div className="field actions-right">
+              <label>&nbsp;</label>
+              <button
+                className="btn primary"
+                type="submit"
+                disabled={loading}
+                aria-disabled={loading}
+              >
+                {/* CHANGED: inline spinner */}
+                {loading && <span className="btn-spinner" aria-hidden="true"></span>}
+                <span className="btn-text">{loading ? "Sending..." : "Book Now"}</span>
+              </button>
+            </div>
         </div>
       </motion.form>
 
-      {/* Map modal (optional) */}
+            {/* CHANGED: small overlay spinner while loading */}
+      {loading && (
+        <div className="booking-loading-overlay" aria-hidden="true">
+          <div className="overlay-spinner" />
+        </div>
+      )}
+
+      {/* CHANGED: success modal */}
+      <AnimatePresence>
+        {successModal.open && (
+          <motion.div className="success-modal" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}>
+            <div className="success-modal-inner">
+              <h4>Booking Submitted</h4>
+              <p>Your booking was submitted successfully.</p>
+              {successModal.ref ? <div className="muted">Ref: <strong>{successModal.ref}</strong></div> : null}
+              <div style={{ marginTop: 10 }}>
+                <button className="btn small" onClick={() => setSuccessModal({ open: false, ref: null })}>Close</button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+
+      {/* Map modal (unchanged) */}
       <AnimatePresence>
         {modalFor && (
           <motion.div className="map-modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -666,48 +739,10 @@ const BookingForm = ({ className = "" }) => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Stylish dropdown CSS (paste into hero.scss if you prefer) */}
-      <style jsx="true">{`
-        .stylish-dropdown {
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: calc(100% + 8px);
-          background: #fff;
-          border-radius: 12px;
-          box-shadow: 0 12px 30px rgba(2,6,23,0.12);
-          overflow: hidden;
-          z-index: 1600;
-          max-height: 260px;
-          overflow-y: auto;
-          padding: 6px;
-          border: 1px solid rgba(2,6,23,0.04);
-          animation: popIn 160ms cubic-bezier(.2,.9,.3,1);
-        }
-        .stylish-dropdown li {
-          padding: 10px 12px;
-          cursor: pointer;
-          display: block;
-          transition: background 120ms, transform 120ms;
-          border-radius: 8px;
-          margin: 4px 0;
-        }
-        .stylish-dropdown li:hover,
-        .stylish-dropdown li.active {
-          background: linear-gradient(90deg, rgba(15,98,254,0.06), rgba(255,107,53,0.03));
-          transform: translateY(-2px);
-        }
-        .stylish-dropdown .s-title { font-weight:600; font-size:14px; color:#0b1220; }
-        .stylish-dropdown .s-sub { font-size:12px; color:#6b7280; margin-top:4px; }
-        @keyframes popIn { from { opacity: 0; transform: translateY(-6px); } to { opacity:1; transform:translateY(0); } }
-        /* scrollbar */
-        .stylish-dropdown::-webkit-scrollbar { width:8px; }
-        .stylish-dropdown::-webkit-scrollbar-thumb { background: rgba(2,6,23,0.08); border-radius:8px; }
-      `}</style>
     </div>
   );
 };
+
 
 
 /* ---------------- Hero (carousel + booking) ---------------- */
