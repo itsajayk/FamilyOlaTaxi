@@ -410,10 +410,12 @@ const BookingForm = ({ className = "" }) => {
   };
 
 
-  const validate = () => {
-    // CHANGED: allow Local Packages to be submitted without pickup/drop
+    const validate = () => {
+    // Allow typed queries to count as filled addresses.
     if (tripType !== "Local Packages") {
-      if (!pickup.address || !drop.address) {
+      const pickupFilled = Boolean((pickup && pickup.address) || pickupQuery);
+      const dropFilled = Boolean((drop && drop.address) || dropQuery);
+      if (!pickupFilled || !dropFilled) {
         alert("Please fill pickup and drop locations (or choose Local Packages).");
         return false;
       }
@@ -429,25 +431,40 @@ const BookingForm = ({ className = "" }) => {
     return true;
   };
 
-    const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
+
+    // Normalize location object so backend always receives an address string
+    // even if the user typed it (no lat/lng available).
+    const normalizeLoc = (loc, query) => {
+      if (!loc && !query) return null;
+      if (loc && loc.address) return loc;
+      // user typed an address (query) but didn't pick a suggestion/map
+      if (query) return { address: query, lat: null, lng: null };
+      return null;
+    };
+
+    const pickupLoc = normalizeLoc(pickup, pickupQuery);
+    const dropLoc = normalizeLoc(drop, dropQuery);
+
     const payload = {
-      tripType, cabType,
-      pickupLocation: tripType === "Local Packages" ? (pickup.address ? pickup : null) : pickup,
-      dropLocation: tripType === "Local Packages" ? (drop.address ? drop : null) : drop,
-      pickupDateTime, createdAt: new Date().toISOString(),
+      tripType,
+      cabType,
+      pickupLocation: tripType === "Local Packages" ? (pickupLoc ? pickupLoc : null) : pickupLoc,
+      dropLocation: tripType === "Local Packages" ? (dropLoc ? dropLoc : null) : dropLoc,
+      pickupDateTime,
+      createdAt: new Date().toISOString(),
       localPackage: tripType === "Local Packages" ? localPackage : null,
     };
+
     try {
       const res = await axios.post(`${API_BASE.replace(/\/$/, "")}/bookings`, payload);
 
-      // CHANGED: show success modal instead of alert
       const refId = (res?.data?._id) || (res?.data?.id) || null;
       setSuccessModal({ open: true, ref: refId });
 
-      // auto close after 3.5s
       clearTimeout(successTimeoutRef.current);
       successTimeoutRef.current = setTimeout(() => setSuccessModal({ open: false, ref: null }), 3500);
 
@@ -464,6 +481,7 @@ const BookingForm = ({ className = "" }) => {
       setLoading(false);
     }
   };
+
 
 
   // keyboard nav handlers (unchanged)
