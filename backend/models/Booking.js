@@ -1,10 +1,9 @@
-// models/Booking.js
 const mongoose = require('mongoose');
 
 const BookingSchema = new mongoose.Schema({
   tripType: String,
   cabType: String,
-  localPackage: { type: String, default: null }, // ADDED
+  localPackage: { type: String, default: null },
   pickupLocation: {
     address: String,
     lat: Number,
@@ -15,11 +14,9 @@ const BookingSchema = new mongoose.Schema({
     lat: Number,
     lng: Number
   },
-  // optional contact fields (useful for admin)
-  customerName: { type: String, default: "" }, // ADDED (optional)
-  customerPhone: { type: String, default: "" }, // ADDED (optional)
-  customerEmail: { type: String, default: "" }, // ADDED (optional)
-
+  customerName: { type: String, default: "" },
+  customerPhone: { type: String, default: "" },
+  customerEmail: { type: String, default: "" },
   pickupDateTime: Date,
   createdAt: { type: Date, default: Date.now }
 });
